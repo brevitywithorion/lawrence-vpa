@@ -39,8 +39,8 @@
   <li><strong>8</strong> map parcels had no row in the 2026 Appraiser file (shown without values).</li>
   <li>The county workbook has 41,996 rows countywide; the map is limited to Lawrence parcel polygons.</li>
 </ul>
-<h2>3D height</h2>
-<p>Extrusion height is proportional to value per acre (or total value / acres in other views), then <strong>clamped at the 99.5th percentile</strong> so outliers stay in view. At the default 1.0× slider, the capped maximum is about 1,400 meters of extrusion. Legend colors still use uncapped true values; the legend notes the height cap.</p>
+<h2>3D height and color</h2>
+<p>Extrusion height and the color ramp both use a continuous <strong>log1p</strong> scale, normalized so the dataset maximum maps to about 1,400&nbsp;m at the default 1.0× slider. Outliers taper instead of flat-topping at a hard percentile clamp. Each map view (value per acre, total appraised, acres, density) has its own max for that normalization. Popup numbers remain true uncapped dollars and acres.</p>
 <h2>What we do not do</h2>
 <ul>
   <li>No owner names, mailing addresses, or other PII from the appraisal roll.</li>

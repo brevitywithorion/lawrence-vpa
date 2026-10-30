@@ -1,55 +1,71 @@
 {
   "value_per_acre": [
     0.0,
-    1021428.57,
-    1380000.0,
-    1770000.0,
-    2368421.05,
-    19528571.43
+    38.34,
+    1546.7,
+    60886.92,
+    2395381.21,
+    94236363.64
   ],
   "appraised_value": [
     0.0,
-    224200.0,
-    284100.0,
-    355400.0,
-    476190.0,
+    54.9,
+    3123.32,
+    174635.18,
+    9761403.18,
     545620110.0
   ],
   "acres": [
-    0.005,
-    0.14,
-    0.19,
-    0.23,
-    0.32,
+    0.0,
+    2.51,
+    11.33,
+    42.28,
+    150.95,
     532.5
   ],
-  "median_home_value": [
-    196000.0,
-    221000.0,
-    264700.0,
-    275500.0,
-    391700.0,
-    490900.0
-  ],
   "pop_density_per_acre": [
-    0.37,
-    3.2,
-    5.34,
-    6.56,
-    8.08,
+    0.0,
+    0.95,
+    2.81,
+    6.44,
+    13.52,
     27.34
+  ],
+  "median_home_value": [
+    0.0,
+    12.75,
+    187.97,
+    2596.74,
+    35709.43,
+    490900.0
   ],
   "parcel_count": 27842,
   "matched": 27834,
   "unmatched": 8,
   "null_vpa": 0,
-  "height_caps": {
-    "value_per_acre": 19658823.53,
-    "appraised_value": 9182400.0,
-    "acres": 17.4,
-    "pop_density_per_acre": 27.344
-  },
   "height_target_m": 1400.0,
-  "height_cap_percentile": 99.5,
-  "height_note": "Extrusion height capped at the 99.5th percentile so outliers stay on screen; legend colors use true values."
+  "height_transform": "log1p",
+  "height_norm": {
+    "value_per_acre": {
+      "max": 94236363.64,
+      "log1p_max": 18.361316701571713,
+      "transform": "log1p"
+    },
+    "appraised_value": {
+      "max": 545620110.0,
+      "log1p_max": 20.117433524151444,
+      "transform": "log1p"
+    },
+    "acres": {
+      "max": 532.5,
+      "log1p_max": 6.279459070741808,
+      "transform": "log1p"
+    },
+    "pop_density_per_acre": {
+      "max": 27.344,
+      "log1p_max": 3.3444153675631707,
+      "transform": "log1p"
+    }
+  },
+  "height_note": "Height and color use continuous log scaling (log1p) so outliers taper instead of flat-topping; popup values stay true dollars."
 }

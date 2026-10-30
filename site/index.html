@@ -246,7 +246,7 @@
 
       <label for="view">Map view</label>
       <select id="view">
-        <option value="vpa">$/acre (appraised ÷ acres)</option>
+        <option value="vpa" selected>$/acre (appraised ÷ acres)</option>
         <option value="total">Total appraised value</option>
         <option value="acres">Parcel acres</option>
         <option value="zoning">Zoning districts (REAL)</option>
@@ -267,7 +267,7 @@
         <span id="heightLabel">1.00×</span>
       </div>
 
-      <p class="note" id="viewNote">Color tracks true $/acre; height is capped at the 99.5th percentile so outliers stay on screen. Hover or click a parcel for details.</p>
+      <p class="note" id="viewNote">Default view is $/acre. Height and color use continuous log scaling so outliers taper; popups show true values. Hover or click a parcel for details.</p>
       <p class="note">Values: Douglas County Appraiser's Office, 2026 (KORA). Geometry: Douglas County Tax_Parcel. Also: City of Lawrence EPL Zoning; ACS via Census Reporter; 2020 Census block groups; Microsoft Building Footprints (Esri). Inspired by <a href="https://pracre.org" style="color:#9ec1ff">Pracre</a> / Urban3. Not affiliated.</p>
     </div>
 
@@ -275,7 +275,7 @@
       <label>Legend</label>
       <div class="legend-bar" id="legendBar"></div>
       <div class="legend-scale"><span id="legMin">low</span><span id="legMax">high</span></div>
-      <p class="note" id="legendHeightNote" style="margin-top:0.35rem">Height capped at p99.5 for display; colors show true values.</p>
+      <p class="note" id="legendHeightNote" style="margin-top:0.35rem">Height &amp; color: continuous log scale (outliers taper). Popups show true values.</p>
       <div class="legend-cat" id="legendCat" hidden></div>
     </div>
   </aside>

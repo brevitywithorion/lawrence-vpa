@@ -1,0 +1,28 @@
+{
+  "before": {
+    "value_per_acre": {
+      "at_max_count": 140,
+      "at_max_pct": 0.503,
+      "cap": 19658823.53
+    },
+    "appraised_value": {
+      "at_max_count": 140,
+      "at_max_pct": 0.503,
+      "cap": 9182400.0
+    }
+  },
+  "after": {
+    "value_per_acre": {
+      "at_exact_max_count": 1,
+      "at_exact_max_pct": 0.003593,
+      "near_max_0_1pct_count": 1,
+      "near_max_0_1pct_pct": 0.003593
+    },
+    "appraised_value": {
+      "at_exact_max_count": 1,
+      "at_exact_max_pct": 0.003593,
+      "near_max_0_1pct_count": 1,
+      "near_max_0_1pct_pct": 0.003593
+    }
+  }
+}

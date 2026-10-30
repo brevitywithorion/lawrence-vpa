@@ -6,9 +6,9 @@ const VIEWS = {
     kind: "parcel-numeric",
     prop: "value_per_acre",
     heightProp: "value_per_acre",
-    heightScale: 0.000015,  // fallback; overwritten from p99 cap → target meters
+    heightScale: 0.000015,  // fallback only
     demo: false,
-    note: "Color = true $/acre. Height uses the same values but is capped at the 99.5th percentile so outliers stay on screen.",
+    note: "Default view: $/acre. Height and color use continuous log scaling so outliers taper (popups show true $/acre).",
     stops: null, // filled after load
     format: (v) => "$" + Math.round(v).toLocaleString() + "/ac",
   },
@@ -16,18 +16,18 @@ const VIEWS = {
     kind: "parcel-numeric",
     prop: "appraised_value",
     heightProp: "appraised_value",
-    heightScale: 0.000041,  // fallback; overwritten from p99 cap
+    heightScale: 0.000041,  // fallback only
     demo: false,
-    note: "Color = true total appraised. Height capped at the 99.5th percentile for display.",
+    note: "Total appraised (log-scaled height/color so huge parcels don't flat-top). Popups show true dollars.",
     format: (v) => "$" + Math.round(v).toLocaleString(),
   },
   acres: {
     kind: "parcel-numeric",
     prop: "acres",
     heightProp: "acres",
-    heightScale: 21.7,  // fallback; overwritten from p99 cap
+    heightScale: 21.7,  // fallback only
     demo: false,
-    note: "REAL parcel acreage. Height capped at the 99.5th percentile for display.",
+    note: "REAL parcel acreage with log-scaled height so giant lots don't dominate.",
     format: (v) => Number(v).toFixed(3) + " ac",
   },
   zoning: {
@@ -50,9 +50,9 @@ const VIEWS = {
     source: "block_groups",
     prop: "pop_density_per_acre",
     heightProp: "pop_density_per_acre",
-    heightScale: 15.0,  // fallback; overwritten from p99 cap
+    heightScale: 15.0,  // fallback only
     demo: false,
-    note: "REAL 2020 Census population / acre. Height capped at the 99.5th percentile for display.",
+    note: "REAL 2020 Census population / acre (log-scaled height).",
     format: (v) => Number(v).toFixed(2) + " people/ac",
   },
   buildings: {
@@ -87,12 +87,16 @@ function quantileStops(values, n = 5) {
   return [...new Set(stops)];
 }
 
+/** Continuous color: interpolate in log1p(value) space using log-spaced true-value stops. */
 function colorExpr(prop, stops) {
-  const expr = ["interpolate", ["linear"], ["get", prop]];
+  const input = ["ln", ["+", 1, ["max", 0, ["to-number", ["get", prop]]]]];
+  const expr = ["interpolate", ["linear"], input];
   const n = Math.max(stops.length - 1, 1);
   for (let i = 0; i < stops.length; i++) {
+    const v = Math.max(0, Number(stops[i]) || 0);
+    const t = Math.log1p(v);
     const color = RAMP[Math.min(RAMP.length - 1, Math.round((i / n) * (RAMP.length - 1)))];
-    expr.push(stops[i], color);
+    expr.push(t, color);
   }
   return expr;
 }
@@ -174,24 +178,22 @@ const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxW
 let currentView = "vpa";
 let parcelStops = {};
 let heightMultiplier = 1.0; // default; slider 0.05–2×
-let heightCaps = {}; // prop → p99 cap (from stats.json)
-let heightTargetM = 1400; // meters for a p99.5-capped value at multiplier 1.0
+let heightNorm = {}; // prop → { max, log1p_max, transform }
+let heightTargetM = 1400; // meters for the dataset max at multiplier 1.0 (after log1p)
 const HEIGHT_NOTE =
-  "Height capped at p99.5 for display; colors show true values.";
+  "Height & color: continuous log scale (outliers taper; no flat cap). Popups show true values.";
 
-function heightScaleFor(prop, fallbackScale) {
-  const cap = heightCaps[prop];
-  if (cap && cap > 0) return heightTargetM / cap;
-  return fallbackScale;
-}
-
-/** Clamp value at p99, then scale so p99 → heightTargetM × multiplier (meters). */
+/** log1p(value) / log1p(max) * targetM * multiplier — continuous, no plateau. */
 function extrusionHeight(prop, fallbackScale) {
-  const scale = heightScaleFor(prop, fallbackScale) * heightMultiplier;
-  const cap = heightCaps[prop];
-  const raw = ["to-number", ["get", prop]];
-  const clamped = cap && cap > 0 ? ["min", raw, cap] : raw;
-  return ["*", clamped, scale];
+  const norm = heightNorm[prop];
+  const raw = ["max", 0, ["to-number", ["get", prop]]];
+  const logv = ["ln", ["+", 1, raw]];
+  if (norm && norm.log1p_max > 0) {
+    const scale = (heightTargetM / norm.log1p_max) * heightMultiplier;
+    return ["*", logv, scale];
+  }
+  // fallback linear
+  return ["*", raw, fallbackScale * heightMultiplier];
 }
 
 function setLegendNumeric(stops, formatter) {
@@ -417,10 +419,10 @@ map.on("load", async () => {
   // Load stats via fetching geojson properties with a lightweight precomputed stats
   const stats = await fetch("data/stats.json").then((r) => r.json());
   parcelStops = stats;
-  heightCaps = stats.height_caps || {};
+  heightNorm = stats.height_norm || {};
   if (stats.height_target_m) heightTargetM = Number(stats.height_target_m) || heightTargetM;
   if (stats.height_note) {
-    // keep HEIGHT_NOTE as the short legend line; stats note is for docs
+    // legend uses HEIGHT_NOTE; stats.height_note is the longer prose
   }
   // Sync slider default UI (HTML default is 0.5)
   const heightSliderInit = document.getElementById("heightScale");
@@ -428,6 +430,8 @@ map.on("load", async () => {
     heightMultiplier = parseFloat(heightSliderInit.value) || 1.0;
     document.getElementById("heightLabel").textContent = heightMultiplier.toFixed(2) + "×";
   }
+  const viewSel = document.getElementById("view");
+  if (viewSel) viewSel.value = "vpa";
   applyView("vpa");
 
   for (const [layer, kind] of [
