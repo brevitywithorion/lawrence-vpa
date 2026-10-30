@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Lawrence Value per Acre</title>
+  <meta name="description" content="Urban3-style 3D value-per-acre map of Lawrence, KS. Appraised values from Douglas County Appraiser's Office (2026, via KORA). Real parcel, zoning, census, and building layers." />
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: rgba(12, 18, 36, 0.92);
+      --text: #e8eefc;
+      --muted: #9aa8c7;
+      --accent: #ffb020;
+      --danger: #ff5c5c;
+      --border: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", system-ui, sans-serif; }
+    #map { position: absolute; inset: 0; }
+    .banner {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+      background: linear-gradient(90deg, #1a3a5c, #245a8c 40%, #1a3a5c);
+      color: #fff; text-align: center; font-weight: 600; letter-spacing: 0.02em;
+      padding: 0.45rem 0.75rem; font-size: 0.82rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.45);
+    }
+    .panel {
+      position: absolute; z-index: 2; top: 2.5rem; left: 0.75rem;
+      width: min(340px, calc(100vw - 1.5rem));
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.9rem 1rem; backdrop-filter: blur(8px);
+      max-height: calc(100vh - 3.5rem); overflow: auto;
+    }
+    .panel-toggle {
+      display: none;
+      width: auto;
+      background: #151d35;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .panel-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .panel-body { display: block; }
+    h1 { font-size: 1.05rem; margin: 0 0 0.25rem; }
+    .sub { color: var(--muted); font-size: 0.78rem; margin-bottom: 0.75rem; line-height: 1.35; }
+    label { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0.65rem 0 0.3rem; }
+    select, button {
+      width: 100%; background: #151d35; color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.45rem 0.55rem; font: inherit;
+    }
+    .row { display: flex; gap: 0.4rem; }
+    .row button { flex: 1; cursor: pointer; }
+    .row button.active { border-color: var(--accent); color: var(--accent); }
+    .height-scale { display: flex; align-items: center; gap: 0.5rem; }
+    .height-scale input[type=range] { flex: 1; accent-color: var(--accent); }
+    .height-scale #heightLabel { font-variant-numeric: tabular-nums; font-size: 0.8rem; min-width: 2.6rem; color: var(--accent); }
+    .demo-chip {
+      /* source credit chip */
+      display: inline-block; background: #5c1400; color: #ffd7a8; border: 1px solid #ff8a3d;
+      border-radius: 999px; padding: 0.15rem 0.55rem; font-size: 0.7rem; font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .legend { margin-top: 0.75rem; }
+    .legend-bar {
+      height: 12px; border-radius: 4px;
+      background: linear-gradient(90deg, #0d0887, #6a00a8, #b12a90, #e16462, #fca636, #f0f921);
+      margin: 0.35rem 0;
+    }
+    .legend-scale { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
+    .legend-cat { display: grid; grid-template-columns: 14px 1fr; gap: 0.25rem 0.45rem; font-size: 0.72rem; align-items: center; max-height: 180px; overflow: auto; }
+    .swatch { width: 14px; height: 14px; border-radius: 3px; }
+    .note { font-size: 0.72rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.4; }
+    .maplibregl-popup-content {
+      background: #121a30; color: var(--text); border-radius: 10px; padding: 0.7rem 0.85rem;
+      border: 1px solid var(--border); min-width: 200px; font-size: 0.82rem;
+    }
+    .maplibregl-popup-tip { border-top-color: #121a30 !important; }
+    .popup h3 { margin: 0 0 0.35rem; font-size: 0.9rem; }
+    .popup .warn { color: var(--accent); font-weight: 700; font-size: 0.72rem; margin-bottom: 0.4rem; }
+    .popup dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 0.6rem; }
+    .popup dt { color: var(--muted); }
+    .popup dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+    .site-nav-map {
+      position: absolute; z-index: 3; top: 2.35rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; justify-content: center;
+      padding: 0.3rem 0.65rem; background: rgba(12,18,36,0.88);
+      border: 1px solid var(--border); border-radius: 999px; font-size: 0.72rem;
+    }
+    .site-nav-map a { color: var(--muted); text-decoration: none; }
+    .site-nav-map a:hover { color: var(--accent); }
+    @media (max-width: 640px) {
+      .site-nav-map { top: auto; bottom: 3.6rem; left: 0.5rem; right: 0.5rem; transform: none; font-size: 0.68rem; }
+    }
+
+    .yaw-controls {
+      position: absolute; z-index: 2;
+      right: 0.75rem; bottom: 2.6rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
+      pointer-events: auto;
+    }
+    .yaw-controls button {
+      width: 36px; height: 36px; padding: 0;
+      border-radius: 8px; cursor: pointer;
+      font-size: 1.05rem; line-height: 1;
+      background: rgba(12, 18, 36, 0.92);
+      color: var(--text); border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .yaw-controls button:hover { border-color: var(--accent); color: var(--accent); }
+    .yaw-controls button:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 2px;
+    }
+    .yaw-hint {
+      position: absolute; z-index: 2;
+      right: 0.75rem; bottom: 0.55rem;
+      margin: 0; padding: 0.25rem 0.5rem;
+      background: rgba(12, 18, 36, 0.85);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--muted); font-size: 0.68rem; line-height: 1.3;
+      pointer-events: none; max-width: 14rem; text-align: right;
+    }
+    /* Keep MapLibre nav (zoom+compass) clear of left panel */
+    .maplibregl-ctrl-top-right { top: 2.6rem; right: 0.5rem; }
+
+    /* Mobile: collapsible bottom sheet; map stays visible */
+    @media (max-width: 640px) {
+      .banner {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.02em;
+        font-weight: 600;
+      }
+      .panel {
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: none;
+        border-radius: 14px 14px 0 0;
+        padding: 0.55rem 0.75rem 0.65rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+      }
+      .panel-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        align-self: center;
+        margin: 0;
+      }
+      .panel-toggle::before {
+        content: "";
+        display: block;
+        width: 36px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.28);
+        position: absolute;
+        top: 0.35rem;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .panel { position: absolute; }
+      .panel-body {
+        display: none;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        max-height: calc(45vh - 3.5rem);
+        padding-bottom: 0.25rem;
+      }
+      .panel.is-open .panel-body {
+        display: block;
+      }
+      .panel.is-open {
+        max-height: 45vh;
+      }
+      .panel:not(.is-open) {
+        max-height: none;
+      }
+      .legend {
+        margin-top: 0;
+        flex-shrink: 0;
+      }
+      .legend > label {
+        margin: 0.15rem 0 0.15rem;
+        font-size: 0.65rem;
+      }
+      .legend-bar { height: 8px; margin: 0.2rem 0; }
+      .legend-scale { font-size: 0.62rem; }
+      .legend-cat {
+        max-height: 4.5rem;
+        font-size: 0.65rem;
+        gap: 0.15rem 0.35rem;
+      }
+      .panel.is-open .legend-cat { max-height: 6rem; }
+      .demo-chip { font-size: 0.62rem; margin-bottom: 0.35rem; }
+
+      .yaw-controls { bottom: 4.5rem; right: 0.5rem; }
+      .yaw-hint { display: none; }
+      h1 { font-size: 0.95rem; }
+      .sub { font-size: 0.72rem; margin-bottom: 0.5rem; }
+      .note { font-size: 0.65rem; margin-top: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner" role="status">Douglas County Appraiser's Office — 2026 values (via KORA request). Total appraised ÷ acres. No owner names.</div>
+  <div id="map" role="application" aria-label="Lawrence 3D value map" tabindex="0"></div>
+
+  <nav class="site-nav-map" aria-label="Site">
+    <a href="about.html">About</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="data.html">Data</a>
+    <a href="findings.html">Findings</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="yaw-controls" id="yawControls" aria-label="Rotate map">
+    <button type="button" id="btnYawLeft" title="Rotate left (Q)" aria-label="Rotate map left">⟲</button>
+    <button type="button" id="btnYawRight" title="Rotate right (E)" aria-label="Rotate map right">⟳</button>
+  </div>
+  <p class="yaw-hint" id="yawHint">Right-drag or Q/E to rotate</p>
+  <aside class="panel" id="controlsPanel" aria-label="Map controls">
+    <button type="button" class="panel-toggle" id="panelToggle" aria-expanded="false" aria-controls="panelBody">Options</button>
+    <div class="panel-body" id="panelBody">
+      <div class="demo-chip" id="sourceChip">2026 Appraiser values · KORA</div>
+      <h1>Lawrence value per acre</h1>
+      <p class="sub">Urban3-style 3D map. Parcel geometry from Douglas County GIS. Appraised values from the Douglas County Appraiser's Office (2026, via KORA). No owner names.</p>
+
+      <label for="view">Map view</label>
+      <select id="view">
+        <option value="vpa">$/acre (appraised ÷ acres)</option>
+        <option value="total">Total appraised value</option>
+        <option value="acres">Parcel acres</option>
+        <option value="zoning">Zoning districts (REAL)</option>
+        <option value="medvalue">Median home value by tract (REAL ACS)</option>
+        <option value="popdens">Population density by block group (REAL)</option>
+        <option value="buildings">Building footprints (REAL Microsoft)</option>
+      </select>
+
+      <label>Pitch / 3D</label>
+      <div class="row">
+        <button type="button" id="btn3d" class="active">3D</button>
+        <button type="button" id="btn2d">2D</button>
+      </div>
+
+      <label for="heightScale">Extrusion height</label>
+      <div class="height-scale">
+        <input type="range" id="heightScale" min="0.05" max="2" step="0.05" value="1" aria-valuemin="0.05" aria-valuemax="2" aria-valuenow="1" />
+        <span id="heightLabel">1.00×</span>
+      </div>
+
+      <p class="note" id="viewNote">Color tracks true $/acre; height is capped at the 99.5th percentile so outliers stay on screen. Hover or click a parcel for details.</p>
+      <p class="note">Values: Douglas County Appraiser's Office, 2026 (KORA). Geometry: Douglas County Tax_Parcel. Also: City of Lawrence EPL Zoning; ACS via Census Reporter; 2020 Census block groups; Microsoft Building Footprints (Esri). Inspired by <a href="https://pracre.org" style="color:#9ec1ff">Pracre</a> / Urban3. Not affiliated.</p>
+    </div>
+
+    <div class="legend" id="legend">
+      <label>Legend</label>
+      <div class="legend-bar" id="legendBar"></div>
+      <div class="legend-scale"><span id="legMin">low</span><span id="legMax">high</span></div>
+      <p class="note" id="legendHeightNote" style="margin-top:0.35rem">Height capped at p99.5 for display; colors show true values.</p>
+      <div class="legend-cat" id="legendCat" hidden></div>
+    </div>
+  </aside>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      const panel = document.getElementById("controlsPanel");
+      const toggle = document.getElementById("panelToggle");
+      if (!panel || !toggle) return;
+
+      function setOpen(open) {
+        panel.classList.toggle("is-open", open);
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.textContent = open ? "Close options" : "Options";
+      }
+
+      toggle.addEventListener("click", function () {
+        setOpen(!panel.classList.contains("is-open"));
+      });
+
+      // Collapsed by default on narrow screens; desktop ignores .is-open / toggle.
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        setOpen(false);
+      }
+    })();
+  </script>
+</body>
+</html>

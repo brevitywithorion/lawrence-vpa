@@ -1,0 +1,30 @@
+{
+  "title": "Lawrence Value per Acre",
+  "demo_banner": null,
+  "source_credit": "Douglas County Appraiser's Office, 2026 values, via KORA request",
+  "value_year": 2026,
+  "land_improvement_breakout": false,
+  "note": "Total appraised value only (RP_AprTot); land/improvement not broken out in county file. County acres used when >0; else map geometry acres. Zero/missing acres \u2192 no $/acre.",
+  "counts": {
+    "parcels": 27842,
+    "matched": 27834,
+    "unmatched": 8,
+    "null_vpa": 0,
+    "zero_county_acres_matched": 868,
+    "map_acres_fallback": 868,
+    "county_file_rows": 41996,
+    "county_unique_pids": 41996,
+    "zoning": 918,
+    "tracts": 25,
+    "block_groups": 63,
+    "buildings": 26063
+  },
+  "match_rate": 99.9713,
+  "layers": {
+    "parcels": "REAL \u2014 Douglas County Appraiser's Office, 2026 values, via KORA request",
+    "zoning": "REAL \u2014 City of Lawrence zoning (EPL FeatureServer)",
+    "tracts": "REAL \u2014 ACS median home value + population (Census Reporter)",
+    "block_groups": "REAL \u2014 2020 Census population density (Douglas County GIS)",
+    "buildings": "REAL \u2014 Microsoft Building Footprints via Esri Living Atlas"
+  }
+}

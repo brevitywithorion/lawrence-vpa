@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>FAQ — Lawrence Value per Acre</title>
+  <link rel="stylesheet" href="content.css" />
+</head>
+<body>
+<nav class="site-nav" aria-label="Site">
+  <a class="brand" href="index.html">Lawrence VPA</a>
+  <a href="index.html">Map</a>
+  <a href="about.html">About</a>
+  <a href="methodology.html">Methodology</a>
+  <a href="data.html">Data</a>
+  <a href="findings.html">Findings</a>
+  <a href="faq.html" aria-current="page">FAQ</a>
+</nav>
+<main class="wrap">
+
+<h1>Questions</h1>
+<details><summary>Is this the same as my tax bill?</summary>
+<p>No. The map shows <em>appraised</em> value per acre from the county Appraiser, not the tax you pay. Assessed value and mill levies are separate.</p>
+</details>
+<details><summary>Why is $/acre so high for ordinary houses?</summary>
+<p>Total appraised value includes the building. Dividing by lot acres makes small lots look “taller” per acre than large lots with the same house value — that comparison is intentional.</p>
+</details>
+<details><summary>Do you show who owns each parcel?</summary>
+<p>No. Owner names were not requested under KORA and are not in the published GeoJSON.</p>
+</details>
+<details><summary>Why do some towers look shorter than their popup $/acre?</summary>
+<p>3D height is capped at the 99.5th percentile so extreme parcels stay on screen. Colors and popups use the true values.</p>
+</details>
+<details><summary>Can I get the data?</summary>
+<p>Parcel geometry and zoning come from public GIS services. The 2026 value table was released by the Douglas County Appraiser under KORA; see <a href="data.html">Data</a>.</p>
+</details>
+<details><summary>Is this an official city or county product?</summary>
+<p>No. It is an independent civic map. Not affiliated with the City of Lawrence, Douglas County, Urban3, Pracre, or Strong Towns.</p>
+</details>
+<details><summary>How do I rotate the map on a desktop?</summary>
+<p>Right-drag (or Ctrl/Shift+left-drag), press Q/E or Shift+arrow keys, or use the rotate buttons. The compass resets north.</p>
+</details>
+
+<p class="footer">Civic map of Lawrence, KS. Appraised values: Douglas County Appraiser's Office, 2026 (KORA). Not affiliated with Urban3, Pracre, or Strong Towns. No owner names are shown.</p>
+</main>
+</body>
+</html>

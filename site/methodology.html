@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Methodology — Lawrence Value per Acre</title>
+  <link rel="stylesheet" href="content.css" />
+</head>
+<body>
+<nav class="site-nav" aria-label="Site">
+  <a class="brand" href="index.html">Lawrence VPA</a>
+  <a href="index.html">Map</a>
+  <a href="about.html">About</a>
+  <a href="methodology.html" aria-current="page">Methodology</a>
+  <a href="data.html">Data</a>
+  <a href="findings.html">Findings</a>
+  <a href="faq.html">FAQ</a>
+</nav>
+<main class="wrap">
+
+<h1>Methodology</h1>
+<p class="lede">Plain arithmetic on public files. Every dollar and acre on the map can be traced to a county or GIS field.</p>
+<h2>Value per acre</h2>
+<div class="card">
+<p><code>value_per_acre = RP_AprTot ÷ acres</code></p>
+<p><strong>RP_AprTot</strong> is total appraised value (land + improvements) from the Douglas County Appraiser 2026 file. The county file does <em>not</em> break out land vs. improvements separately, so this map uses the total only.</p>
+</div>
+<h2>Acres</h2>
+<ol>
+  <li>Prefer county <code>vproplevel_TotalAcres</code> when it is &gt; 0.</li>
+  <li>If county acres are 0 or missing, fall back to the parcel-layer acreage (Douglas County Tax_Parcel / geometry).</li>
+  <li>868 matched parcels used that map fallback; none were left without a usable acreage for $/acre.</li>
+</ol>
+<h2>Joining parcels</h2>
+<p>County <code>PropertyNumber</code> is matched to the map parcel ID (<code>PID</code> style, e.g. <code>023-017-35-0-00-00-001.00-0</code>). Exact string match.</p>
+<ul>
+  <li><strong>27,834 / 27,842</strong> map parcels matched (99.97%).</li>
+  <li><strong>8</strong> map parcels had no row in the 2026 Appraiser file (shown without values).</li>
+  <li>The county workbook has 41,996 rows countywide; the map is limited to Lawrence parcel polygons.</li>
+</ul>
+<h2>3D height</h2>
+<p>Extrusion height is proportional to value per acre (or total value / acres in other views), then <strong>clamped at the 99.5th percentile</strong> so outliers stay in view. At the default 1.0× slider, the capped maximum is about 1,400 meters of extrusion. Legend colors still use uncapped true values; the legend notes the height cap.</p>
+<h2>What we do not do</h2>
+<ul>
+  <li>No owner names, mailing addresses, or other PII from the appraisal roll.</li>
+  <li>No synthetic “DEMO” values — the map uses the 2026 Appraiser file received via KORA.</li>
+  <li>No mill-levy / tax-revenue layer yet (rates not in this release).</li>
+</ul>
+
+<p class="footer">Civic map of Lawrence, KS. Appraised values: Douglas County Appraiser's Office, 2026 (KORA). Not affiliated with Urban3, Pracre, or Strong Towns. No owner names are shown.</p>
+</main>
+</body>
+</html>

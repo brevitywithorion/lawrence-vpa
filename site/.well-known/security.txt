@@ -1,0 +1,5 @@
+Contact: mailto:orion.wills@gmail.com
+Expires: 2027-10-30T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://lawrence-vpa.pages.dev/.well-known/security.txt
+Policy: Public civic map of Douglas County appraised values; no accounts or user data.

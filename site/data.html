@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Data sources — Lawrence Value per Acre</title>
+  <link rel="stylesheet" href="content.css" />
+</head>
+<body>
+<nav class="site-nav" aria-label="Site">
+  <a class="brand" href="index.html">Lawrence VPA</a>
+  <a href="index.html">Map</a>
+  <a href="about.html">About</a>
+  <a href="methodology.html">Methodology</a>
+  <a href="data.html" aria-current="page">Data</a>
+  <a href="findings.html">Findings</a>
+  <a href="faq.html">FAQ</a>
+</nav>
+<main class="wrap">
+
+<h1>Data sources</h1>
+<p class="lede">Provenance for every layer on the map. Dates and request path are recorded so anyone can reproduce the join.</p>
+<h2>Appraised values (primary)</h2>
+<div class="card">
+<p><strong>Douglas County Appraiser's Office — 2026 values</strong>, file <code>DgCo2026Values.xlsx</code>.</p>
+<ul>
+  <li>Received <strong>2026-10-30</strong> in response to a free <strong>Kansas Open Records Act (KORA)</strong> request.</li>
+  <li>Answered by County Appraiser <strong>Brad Eldridge</strong> (no fee).</li>
+  <li>Columns: PropertyNumber, RP_AprTot, RP_AsdTotal, fpropclass, TaxUnitGroupCode, TaxUnitGroupDesc, vproplevel_TotalAcres.</li>
+  <li>No owner names were requested or included.</li>
+</ul>
+</div>
+<h2>Other layers</h2>
+<table>
+  <thead><tr><th>Layer</th><th>Source</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Parcel polygons</td><td>Douglas County GIS Tax_Parcel</td><td>Real shapes; acreage field / geometry</td></tr>
+    <tr><td>Zoning</td><td>City of Lawrence EPL FeatureServer</td><td>Zoning districts</td></tr>
+    <tr><td>Median home value</td><td>ACS B25077 via Census Reporter</td><td>Tract choropleth</td></tr>
+    <tr><td>Population density</td><td>2020 Census block groups (Douglas County GIS)</td><td>People per acre</td></tr>
+    <tr><td>Building footprints</td><td>Microsoft Building Footprints (Esri Living Atlas)</td><td>Clipped to Lawrence</td></tr>
+    <tr><td>Basemap</td><td>OpenFreeMap / OpenStreetMap</td><td>Tiles for MapLibre</td></tr>
+  </tbody>
+</table>
+<p>Licenses and terms follow each publisher’s open-data / open-records policies. Appraisal figures are public-record valuations, not sale prices.</p>
+<h2>Live site</h2>
+<p><a href="https://lawrence-vpa.pages.dev/">https://lawrence-vpa.pages.dev/</a></p>
+
+<p class="footer">Civic map of Lawrence, KS. Appraised values: Douglas County Appraiser's Office, 2026 (KORA). Not affiliated with Urban3, Pracre, or Strong Towns. No owner names are shown.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Findings — Lawrence Value per Acre</title>
+  <link rel="stylesheet" href="content.css" />
+</head>
+<body>
+<nav class="site-nav" aria-label="Site">
+  <a class="brand" href="index.html">Lawrence VPA</a>
+  <a href="index.html">Map</a>
+  <a href="about.html">About</a>
+  <a href="methodology.html">Methodology</a>
+  <a href="data.html">Data</a>
+  <a href="findings.html" aria-current="page">Findings</a>
+  <a href="faq.html">FAQ</a>
+</nav>
+<main class="wrap">
+
+<h1>Key numbers (2026)</h1>
+<p class="lede">Citywide summaries from the joined Lawrence parcel layer. These are descriptive stats, not policy recommendations.</p>
+<div class="statgrid">
+  <div class="stat"><div class="n">27,834</div><div class="l">Parcels matched</div></div>
+  <div class="stat"><div class="n">99.97%</div><div class="l">Match rate</div></div>
+  <div class="stat"><div class="n">$317,700</div><div class="l">Median appraised</div></div>
+  <div class="stat"><div class="n">$1.56M</div><div class="l">Median $/acre</div></div>
+</div>
+<h2>By property class</h2>
+<table>
+  <thead><tr><th>Class</th><th>Count (w/ $/acre)</th><th>Median $/acre</th></tr></thead>
+  <tbody>
+    <tr><td>R (residential)</td><td>24,841</td><td>~$1,622,000</td></tr>
+    <tr><td>C (commercial)</td><td>1,226</td><td>~$1,199,000</td></tr>
+    <tr><td>E (exempt / special)</td><td>708</td><td>~$701,000</td></tr>
+  </tbody>
+</table>
+<p class="muted">Median $/acre for typical ~0.2-acre residential lots is high in absolute dollars because total appraised value (building + land) is divided by land acres only — the same pattern Urban3-style maps highlight for small lots.</p>
+<h2>Outliers</h2>
+<p>A small number of tiny or zero-county-acre parcels produce very large $/acre when map geometry acres are small. Height is capped at p99.5 for display; popups still show the true computed $/acre.</p>
+<p><a href="index.html">Explore on the map →</a></p>
+
+<p class="footer">Civic map of Lawrence, KS. Appraised values: Douglas County Appraiser's Office, 2026 (KORA). Not affiliated with Urban3, Pracre, or Strong Towns. No owner names are shown.</p>
+</main>
+</body>
+</html>

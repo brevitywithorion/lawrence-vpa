@@ -1,0 +1,55 @@
+{
+  "value_per_acre": [
+    0.0,
+    1021428.57,
+    1380000.0,
+    1770000.0,
+    2368421.05,
+    19528571.43
+  ],
+  "appraised_value": [
+    0.0,
+    224200.0,
+    284100.0,
+    355400.0,
+    476190.0,
+    545620110.0
+  ],
+  "acres": [
+    0.005,
+    0.14,
+    0.19,
+    0.23,
+    0.32,
+    532.5
+  ],
+  "median_home_value": [
+    196000.0,
+    221000.0,
+    264700.0,
+    275500.0,
+    391700.0,
+    490900.0
+  ],
+  "pop_density_per_acre": [
+    0.37,
+    3.2,
+    5.34,
+    6.56,
+    8.08,
+    27.34
+  ],
+  "parcel_count": 27842,
+  "matched": 27834,
+  "unmatched": 8,
+  "null_vpa": 0,
+  "height_caps": {
+    "value_per_acre": 19658823.53,
+    "appraised_value": 9182400.0,
+    "acres": 17.4,
+    "pop_density_per_acre": 27.344
+  },
+  "height_target_m": 1400.0,
+  "height_cap_percentile": 99.5,
+  "height_note": "Extrusion height capped at the 99.5th percentile so outliers stay on screen; legend colors use true values."
+}
