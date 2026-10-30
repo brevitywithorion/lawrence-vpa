@@ -41,6 +41,13 @@
 </ul>
 <h2>3D height and color</h2>
 <p>Extrusion height and the color ramp both use a continuous <strong>log1p</strong> scale, normalized so the dataset maximum maps to about 1,400&nbsp;m at the default 1.0× slider. Outliers taper instead of flat-topping at a hard percentile clamp. Each map view (value per acre, total appraised, acres, density) has its own max for that normalization. Popup numbers remain true uncapped dollars and acres.</p>
+
+<h2>Tax-exempt / “government” filter</h2>
+<div class="card">
+<p>The map and Findings page can hide parcels with county property class <code>E</code> (tax-exempt). The 2026 KORA workbook has <strong>no owner-type or government-only field</strong> — only <code>fpropclass</code>, tax-unit codes (levy districts), values, and acres. Class <code>E</code> covers government property <em>and</em> other exempt uses (schools, churches, nonprofits, etc.). The control is therefore labeled <strong>Hide tax-exempt parcels (government, schools, churches, etc.)</strong>, not “government only.”</p>
+<p>When enabled, MapLibre filters out <code>prop_class === "E"</code> (~708 Lawrence parcels) and Findings recomputes medians on the remaining set. Preference is stored in <code>localStorage</code> so the map and Findings stay in sync.</p>
+</div>
+
 <h2>What we do not do</h2>
 <ul>
   <li>No owner names, mailing addresses, or other PII from the appraisal roll.</li>

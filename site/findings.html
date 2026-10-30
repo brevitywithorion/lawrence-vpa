@@ -6,6 +6,10 @@
   <meta name="robots" content="noindex,nofollow,noarchive" />
   <title>Findings — Lawrence Value per Acre</title>
   <link rel="stylesheet" href="content.css" />
+  <style>
+    .toggle-row { display:flex; align-items:flex-start; gap:0.55rem; margin:1rem 0; font-size:0.9rem; cursor:pointer; }
+    .toggle-row input { margin-top:0.25rem; accent-color: var(--accent); }
+  </style>
 </head>
 <body>
 <nav class="site-nav" aria-label="Site">
@@ -18,30 +22,31 @@
   <a href="faq.html">FAQ</a>
 </nav>
 <main class="wrap">
-
 <h1>Key numbers (2026)</h1>
-<p class="lede">Citywide summaries from the joined Lawrence parcel layer. These are descriptive stats, not policy recommendations.</p>
-<div class="statgrid">
-  <div class="stat"><div class="n">27,834</div><div class="l">Parcels matched</div></div>
-  <div class="stat"><div class="n">99.97%</div><div class="l">Match rate</div></div>
-  <div class="stat"><div class="n">$317,700</div><div class="l">Median appraised</div></div>
-  <div class="stat"><div class="n">$1.56M</div><div class="l">Median $/acre</div></div>
+<p class="lede">Citywide summaries from the joined Lawrence parcel layer. Toggle tax-exempt parcels to match the map filter.</p>
+
+<label class="toggle-row" for="hideExemptFindings">
+  <input type="checkbox" id="hideExemptFindings" />
+  <span>Hide tax-exempt parcels (government, schools, churches, etc.)</span>
+</label>
+<p class="muted" id="filterNote">Class <code>E</code> in the county file is tax-exempt. There is no government-only flag in the KORA extract.</p>
+
+<div class="statgrid" id="statGrid">
+  <div class="stat"><div class="n" id="sCount">—</div><div class="l">Parcels w/ $/acre</div></div>
+  <div class="stat"><div class="n" id="sExempt">—</div><div class="l">Tax-exempt (E) hidden</div></div>
+  <div class="stat"><div class="n" id="sMedApr">—</div><div class="l">Median appraised</div></div>
+  <div class="stat"><div class="n" id="sMedVpa">—</div><div class="l">Median $/acre</div></div>
 </div>
+
 <h2>By property class</h2>
 <table>
-  <thead><tr><th>Class</th><th>Count (w/ $/acre)</th><th>Median $/acre</th></tr></thead>
-  <tbody>
-    <tr><td>R (residential)</td><td>24,841</td><td>~$1,622,000</td></tr>
-    <tr><td>C (commercial)</td><td>1,226</td><td>~$1,199,000</td></tr>
-    <tr><td>E (exempt / special)</td><td>708</td><td>~$701,000</td></tr>
-  </tbody>
+  <thead><tr><th>Class</th><th>Count (w/ $/acre)</th><th>Median $/acre</th><th>Median appraised</th></tr></thead>
+  <tbody id="classBody"></tbody>
 </table>
-<p class="muted">Median $/acre for typical ~0.2-acre residential lots is high in absolute dollars because total appraised value (building + land) is divided by land acres only — the same pattern Urban3-style maps highlight for small lots.</p>
-<h2>Outliers</h2>
-<p>A small number of tiny or zero-county-acre parcels produce very large $/acre when map geometry acres are small. Height is capped at p99.5 for display; popups still show the true computed $/acre.</p>
+<p class="muted">Median $/acre divides total appraised (building + land) by land acres — small lots read higher per acre.</p>
 <p><a href="index.html">Explore on the map →</a></p>
-
 <p class="footer">Civic map of Lawrence, KS. Appraised values: Douglas County Appraiser's Office, 2026 (KORA). Not affiliated with Urban3, Pracre, or Strong Towns. No owner names are shown.</p>
 </main>
+<script src="findings.js"></script>
 </body>
 </html>

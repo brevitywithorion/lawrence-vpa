@@ -176,6 +176,27 @@ window.__lawrenceMap = map;
 
 const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "280px" });
 let currentView = "vpa";
+let hideTaxExempt = false;
+const EXEMPT_FILTER_KEY = "lawrenceVpaHideExempt";
+const PARCEL_FILTER_EXEMPT = ["!=", ["get", "prop_class"], "E"];
+
+function applyParcelFilter() {
+  const filter = hideTaxExempt ? PARCEL_FILTER_EXEMPT : null;
+  for (const id of ["parcels-extrusion", "parcels-fill", "parcels-outline"]) {
+    if (map.getLayer(id)) map.setFilter(id, filter);
+  }
+}
+
+function setHideTaxExempt(on, { persist = true } = {}) {
+  hideTaxExempt = !!on;
+  const el = document.getElementById("hideExempt");
+  if (el) el.checked = hideTaxExempt;
+  if (persist) {
+    try { localStorage.setItem(EXEMPT_FILTER_KEY, hideTaxExempt ? "1" : "0"); } catch (_) {}
+  }
+  if (map.getLayer("parcels-extrusion")) applyParcelFilter();
+}
+
 let parcelStops = {};
 let heightMultiplier = 1.0; // default; slider 0.05–2×
 let heightNorm = {}; // prop → { max, log1p_max, transform }
@@ -245,6 +266,7 @@ function applyView(name) {
     map.setLayoutProperty("parcels-extrusion", "visibility", map.getPitch() > 5 ? "visible" : "none");
     map.setLayoutProperty("parcels-fill", "visibility", map.getPitch() > 5 ? "none" : "visible");
     map.setLayoutProperty("parcels-outline", "visibility", "visible");
+    applyParcelFilter();
     setLegendNumeric(stops, cfg.format);
   } else if (cfg.kind === "categorical") {
     const hn = document.getElementById("legendHeightNote");
@@ -430,6 +452,15 @@ map.on("load", async () => {
     heightMultiplier = parseFloat(heightSliderInit.value) || 1.0;
     document.getElementById("heightLabel").textContent = heightMultiplier.toFixed(2) + "×";
   }
+  // Tax-exempt (class E) omit toggle — shared with Findings via localStorage
+  try { hideTaxExempt = localStorage.getItem(EXEMPT_FILTER_KEY) === "1"; } catch (_) {}
+  const hideEl = document.getElementById("hideExempt");
+  if (hideEl) {
+    hideEl.checked = hideTaxExempt;
+    hideEl.addEventListener("change", () => setHideTaxExempt(hideEl.checked));
+  }
+  applyParcelFilter();
+
   const viewSel = document.getElementById("view");
   if (viewSel) viewSel.value = "vpa";
   applyView("vpa");

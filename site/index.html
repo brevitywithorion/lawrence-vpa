@@ -65,6 +65,14 @@
     .row button.active { border-color: var(--accent); color: var(--accent); }
     .height-scale { display: flex; align-items: center; gap: 0.5rem; }
     .height-scale input[type=range] { flex: 1; accent-color: var(--accent); }
+
+    .toggle-row {
+      display: flex; align-items: flex-start; gap: 0.55rem;
+      margin: 0.65rem 0 0.25rem; font-size: 0.8rem; color: var(--text);
+      line-height: 1.35; cursor: pointer;
+    }
+    .toggle-row input { margin-top: 0.2rem; accent-color: var(--accent); flex-shrink: 0; }
+
     .height-scale #heightLabel { font-variant-numeric: tabular-nums; font-size: 0.8rem; min-width: 2.6rem; color: var(--accent); }
     .demo-chip {
       /* source credit chip */
@@ -260,6 +268,12 @@
         <button type="button" id="btn3d" class="active">3D</button>
         <button type="button" id="btn2d">2D</button>
       </div>
+
+
+      <label class="toggle-row" for="hideExempt">
+        <input type="checkbox" id="hideExempt" />
+        <span>Hide tax-exempt parcels (government, schools, churches, etc.)</span>
+      </label>
 
       <label for="heightScale">Extrusion height</label>
       <div class="height-scale">

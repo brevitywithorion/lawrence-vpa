@@ -22,7 +22,7 @@ Inspired by Urban3-style value-per-acre maps and tools like [Pracre](https://pra
 2. **Match rate: 99.97%** (27,834 / 27,842 map parcels). **8 unmatched.**
 3. Acres: prefer county `vproplevel_TotalAcres` when &gt; 0; otherwise fall back to Tax_Parcel / geometry acres (**868** matched parcels used the fallback when county acres were 0).
 4. Land vs. improvement is **not** broken out in the county file (total only).
-5. 3D height and color use continuous **log1p** scaling (per view), normalized so the dataset max ≈ 1,400 m at 1.0× — outliers taper instead of flat-topping. **Popups show true uncapped values.**
+5. 3D height is proportional to the metric, then **capped at the 99.5th percentile** (default max extrusion ~1,400 m at 1.0×) so outliers stay on screen. **Legend colors and popups use true uncapped values.**
 
 ## Data sources
 
@@ -36,11 +36,21 @@ Inspired by Urban3-style value-per-acre maps and tools like [Pracre](https://pra
 | Building footprints | [Microsoft Building Footprints](https://github.com/microsoft/USBuildingFootprints) via Esri Living Atlas |
 | Basemap | [OpenFreeMap](https://openfreemap.org/) / OpenStreetMap |
 
+
+## Tax-exempt filter
+
+A map toggle (shared with the Findings page) can hide parcels with Douglas County property class **`E` (tax-exempt)**.
+
+- The 2026 Appraiser KORA file has **no government-only or owner-type field**.
+- Class `E` includes government plus schools, churches, and other exempt uses.
+- UI label: **Hide tax-exempt parcels (government, schools, churches, etc.)**.
+- About **708** Lawrence parcels are class `E`; hiding them leaves ~27,126 parcels with $/acre for stats.
+
 ## Limitations
 
 - Public-record appraisals, not sale prices or tax bills.
 - Total appraised value only (no land/improvement split in this release).
-- Tiny or zero-county-acre parcels can produce extreme $/acre; height/color use log scaling so they taper.
+- Tiny or zero-county-acre parcels can produce extreme $/acre; height is capped for display.
 - Independent civic project — not an official city/county product.
 
 ## Site pages

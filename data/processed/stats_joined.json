@@ -67,5 +67,116 @@
       "transform": "log1p"
     }
   },
-  "height_note": "Height and color use continuous log scaling (log1p) so outliers taper instead of flat-topping; popup values stay true dollars."
+  "height_note": "Height and color use continuous log scaling (log1p) so outliers taper instead of flat-topping; popup values stay true dollars.",
+  "findings": {
+    "all": {
+      "parcel_count": 27842,
+      "with_vpa": 27834,
+      "median_vpa": 1561000.0,
+      "median_appraised": 317700.0,
+      "by_class": {
+        "R": {
+          "count": 24841,
+          "median_vpa": 1622068.97,
+          "median_appraised": 318100.0
+        },
+        "C": {
+          "count": 1226,
+          "median_vpa": 1199334.39,
+          "median_appraised": 714350.0
+        },
+        "E": {
+          "count": 708,
+          "median_vpa": 700835.42,
+          "median_appraised": 464405.0
+        },
+        "V": {
+          "count": 964,
+          "median_vpa": 155631.82,
+          "median_appraised": 55000.0
+        },
+        "A": {
+          "count": 55,
+          "median_vpa": 210.0,
+          "median_appraised": 1250.0
+        },
+        "U": {
+          "count": 20,
+          "median_vpa": 0.0,
+          "median_appraised": 0.0
+        },
+        "N": {
+          "count": 10,
+          "median_vpa": 387246.36,
+          "median_appraised": 346615.0
+        },
+        "F": {
+          "count": 9,
+          "median_vpa": 68523.33,
+          "median_appraised": 232260.0
+        },
+        "O": {
+          "count": 1,
+          "median_vpa": 0.0,
+          "median_appraised": 0.0
+        }
+      },
+      "exempt_count": 708
+    },
+    "exclude_tax_exempt": {
+      "parcel_count": 27134,
+      "with_vpa": 27126,
+      "median_vpa": 1574454.55,
+      "median_appraised": 316700.0,
+      "by_class": {
+        "R": {
+          "count": 24841,
+          "median_vpa": 1622068.97,
+          "median_appraised": 318100.0
+        },
+        "C": {
+          "count": 1226,
+          "median_vpa": 1199334.39,
+          "median_appraised": 714350.0
+        },
+        "V": {
+          "count": 964,
+          "median_vpa": 155631.82,
+          "median_appraised": 55000.0
+        },
+        "A": {
+          "count": 55,
+          "median_vpa": 210.0,
+          "median_appraised": 1250.0
+        },
+        "U": {
+          "count": 20,
+          "median_vpa": 0.0,
+          "median_appraised": 0.0
+        },
+        "N": {
+          "count": 10,
+          "median_vpa": 387246.36,
+          "median_appraised": 346615.0
+        },
+        "F": {
+          "count": 9,
+          "median_vpa": 68523.33,
+          "median_appraised": 232260.0
+        },
+        "O": {
+          "count": 1,
+          "median_vpa": 0.0,
+          "median_appraised": 0.0
+        }
+      },
+      "exempt_count": 0
+    },
+    "filter_rule": {
+      "field": "prop_class",
+      "value": "E",
+      "label": "Hide tax-exempt parcels (government, schools, churches, etc.)",
+      "rationale": "Douglas County class E is tax-exempt. The 2026 KORA file has no owner-type or government-only flag; E includes government plus schools, churches, and other exempt uses. Tax-unit fields are levy districts, not ownership."
+    }
+  }
 }
